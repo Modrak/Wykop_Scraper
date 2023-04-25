@@ -42,7 +42,6 @@ def setup_and_configure(driver_to_use):
 
 def unwraping_list(driver_to_use):
     try:
-        #unwrap_buttons = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//li[@class="more" and @data-v-6e6ed6ee]' )))
         unwrap_buttons = driver.find_elements(By.XPATH, '//li[@class="more" and @data-v-6e6ed6ee]')
         for button in unwrap_buttons:
             ActionChains(driver_to_use).move_to_element_with_offset(button, 2, 2).click().perform()
@@ -85,11 +84,9 @@ def article_checking():
 
 def checking_comments():
     try:
-        all_comments = WebDriverWait(driver, 5).until(EC.presence_of_all_elements_located((By.XPATH, '//*[@id="entry-comments"]/section/div/section[contains(@id, "comment")]')))
+        all_comments = driver.find_elements(By.XPATH, '//*[@id="entry-comments"]/section/div/section[contains(@id, "comment")]')
         for comment in all_comments:
-
-            author_of_comment = comment.find_element(By.XPATH,
-                                                     './/article/header/div[2]/div[1]/div/span/a[contains(@class, "username")]')
+            author_of_comment = comment.find_element(By.XPATH, './/article/header/div[2]/div[1]/div/span/a[contains(@class, "username")]')
             pluses = comment.find_elements(By.XPATH, './/article/div/section/ul/li')
             try:
                 for plus in pluses:
@@ -101,8 +98,7 @@ def checking_comments():
                             data_buffor = {'Pluser': single_plus,
                                            'Getter_of_plus': author_of_comment.get_attribute('href')[24:],
                                            'Comment_ID': comment.get_attribute('id')[8:],
-                                           'ID': single_plus + author_of_comment.get_attribute('href')[
-                                                               24:] + comment.get_attribute('id')[8:]}
+                                           'ID': single_plus + author_of_comment.get_attribute('href')[24:] + comment.get_attribute('id')[8:]}
                             data_frame.loc[len(data_frame)] = data_buffor
                     else:
                         autor_plusa = plus.find_element(By.XPATH, './/a')
