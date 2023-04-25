@@ -12,8 +12,7 @@ driver = webdriver.Chrome(PATH)
 data = {'Pluser': [], 'Getter_of_plus': [], 'Comment_ID': [], 'ID':[]}
 data_frame = pd.DataFrame(data, index=None)
 
-data_base_links = pd.read_csv("post_links.csv")
-wykop_links = data_base_links['post_links'].tolist()
+
 
 
 def is_404_code(driver):
@@ -45,7 +44,6 @@ def unwraping_list(driver_to_use):
         unwrap_buttons = driver.find_elements(By.XPATH, '//li[@class="more" and @data-v-6e6ed6ee]')
         for button in unwrap_buttons:
             ActionChains(driver_to_use).move_to_element_with_offset(button, 2, 2).click().perform()
-            button.click()
 
             sleep(1)
     except Exception as exception:
@@ -58,7 +56,7 @@ def get_art_number(article_link):
 
 
 def article_checking():
-    sleep(2)
+    sleep(3)
     print(link)
     article = driver.find_element(By.XPATH, '//*[@class="entry detailed"]/article')
     author_of_article = article.find_element(By.XPATH, './/header//div[@class="right"]//div//div//span//a')
@@ -71,12 +69,12 @@ def article_checking():
             print(plus_list)
             plus_list[-1] = plus_list[-1][0:-1]
             for single_plus in plus_list:
-                print(single_plus)
                 data_buffor = {'Pluser': single_plus, 'Getter_of_plus': author_of_article.get_attribute('href')[24:], 'Comment_ID': get_art_number(link),'ID': single_plus + author_of_article.get_attribute('href')[24:] + get_art_number(link)}
                 data_frame.loc[len(data_frame)] = data_buffor
                 print(data_buffor)
+        elif "profile removed" in plus.find_element(By.XPATH, './/a').get_attribute('class'):
+            continue
         elif plus.get_attribute('class') == "":
-            print(plus.find_element(By.XPATH, './/a').get_attribute('href'))
             pluser = plus.find_element(By.XPATH, './/a')
         data_buffor = {'Pluser': pluser.get_attribute("href")[24:], 'Getter_of_plus': author_of_article.get_attribute('href')[24:], 'Comment_ID': get_art_number(link), 'ID': pluser.get_attribute("href")[24:] + author_of_article.get_attribute('href')[24:] + get_art_number(link)}
         data_frame.loc[len(data_frame)] = data_buffor
@@ -116,20 +114,20 @@ def checking_comments():
         print("Brak komentarzy")
 
 
+data_base_links = pd.read_csv("post_links.csv")
+wykop_links = data_base_links['post_links'].tolist()
 
-
-#for link in wykop_links:
-link = "https://wykop.pl/wpis/71063979"
-driver.get(link)
-sleep(2)
-"""if is_404_code(driver):
-    continue
-else:"""
-setup_and_configure(driver)
-sleep(1)
-unwraping_list(driver)
-article_checking()
-checking_comments()
+for link in wykop_links:
+    driver.get(link)
+    sleep(2)
+    if is_404_code(driver):
+        continue
+    else:
+        setup_and_configure(driver)
+        sleep(1)
+        unwraping_list(driver)
+        article_checking()
+        checking_comments()
 
 
 if os.path.exists("post_likes.csv"):
