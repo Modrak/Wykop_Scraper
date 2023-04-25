@@ -113,7 +113,7 @@ def checking_comments():
     except Exception as exception:
         print("Brak komentarzy")
 
-
+#test
 post_links = pd.read_csv("post_links.csv")
 wykop_links = post_links['post_links'].tolist()
 
