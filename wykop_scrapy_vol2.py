@@ -114,8 +114,8 @@ def checking_comments():
         print("Brak komentarzy")
 
 
-data_base_links = pd.read_csv("post_links.csv")
-wykop_links = data_base_links['post_links'].tolist()
+post_links = pd.read_csv("post_links.csv")
+wykop_links = post_links['post_links'].tolist()
 
 for link in wykop_links:
     driver.get(link)
