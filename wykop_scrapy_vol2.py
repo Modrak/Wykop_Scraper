@@ -44,7 +44,6 @@ def unwraping_list(driver_to_use):
         unwrap_buttons = driver.find_elements(By.XPATH, '//li[@class="more" and @data-v-6e6ed6ee]')
         for button in unwrap_buttons:
             ActionChains(driver_to_use).move_to_element_with_offset(button, 2, 2).click().perform()
-
             sleep(1)
     except Exception as exception:
         print(exception)
@@ -56,26 +55,31 @@ def get_art_number(article_link):
 
 
 def article_checking():
-    sleep(3)
+    sleep(2)
     print(link)
     article = driver.find_element(By.XPATH, '//*[@class="entry detailed"]/article')
     author_of_article = article.find_element(By.XPATH, './/header//div[@class="right"]//div//div//span//a')
     pluses_of_article = article.find_elements(By.XPATH, './/div/section[@class="entry-voters"]/ul/li')
     #Plusujący główny wątek to:
-    sleep(1)
     for plus in pluses_of_article:
-        if plus.get_attribute('class') == "raw":
-            plus_list = plus.get_attribute('innerText').split(", ")
-            print(plus_list)
-            plus_list[-1] = plus_list[-1][0:-1]
-            for single_plus in plus_list:
-                data_buffor = {'Pluser': single_plus, 'Getter_of_plus': author_of_article.get_attribute('href')[24:], 'Comment_ID': get_art_number(link),'ID': single_plus + author_of_article.get_attribute('href')[24:] + get_art_number(link)}
-                data_frame.loc[len(data_frame)] = data_buffor
-                print(data_buffor)
-        elif "profile removed" in plus.find_element(By.XPATH, './/a').get_attribute('class'):
+        try:
+            if plus.get_attribute('class') == "raw":
+                plus_list = plus.get_attribute('innerText').split(", ")
+                print(plus_list)
+                plus_list[-1] = plus_list[-1][0:-1]
+                for single_plus in plus_list:
+                    data_buffor = {'Pluser': single_plus, 'Getter_of_plus': author_of_article.get_attribute('href')[24:], 'Comment_ID': get_art_number(link),'ID': single_plus + author_of_article.get_attribute('href')[24:] + get_art_number(link)}
+                    data_frame.loc[len(data_frame)] = data_buffor
+                    print(data_buffor)
+            elif "profile removed" in plus.find_element(By.XPATH, './/a').get_attribute('class'):
+                continue
+            elif "profile banned" in plus.find_element(By.XPATH, './/a').get_attribute('class'):
+                continue
+            else:
+                pluser = plus.find_element(By.XPATH, './/a')
+        except Exception as exception:
+            print(exception)
             continue
-        elif plus.get_attribute('class') == "":
-            pluser = plus.find_element(By.XPATH, './/a')
         data_buffor = {'Pluser': pluser.get_attribute("href")[24:], 'Getter_of_plus': author_of_article.get_attribute('href')[24:], 'Comment_ID': get_art_number(link), 'ID': pluser.get_attribute("href")[24:] + author_of_article.get_attribute('href')[24:] + get_art_number(link)}
         data_frame.loc[len(data_frame)] = data_buffor
 
