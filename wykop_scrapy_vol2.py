@@ -80,7 +80,10 @@ def article_checking():
         except Exception as exception:
             print(exception)
             continue
-        data_buffor = {'Pluser': pluser.get_attribute("href")[24:], 'Getter_of_plus': author_of_article.get_attribute('href')[24:], 'Comment_ID': get_art_number(link), 'ID': pluser.get_attribute("href")[24:] + author_of_article.get_attribute('href')[24:] + get_art_number(link)}
+        data_buffor = {'Pluser': pluser.get_attribute("href")[24:],
+                       'Getter_of_plus': author_of_article.get_attribute('href')[24:],
+                       'Comment_ID': get_art_number(link),
+                       'ID': pluser.get_attribute("href")[24:] + author_of_article.get_attribute('href')[24:] + get_art_number(link)}
         data_frame.loc[len(data_frame)] = data_buffor
 
 
@@ -117,7 +120,7 @@ def checking_comments():
     except Exception as exception:
         print("Brak komentarzy")
 
-#test
+
 post_links = pd.read_csv("post_links.csv")
 wykop_links = post_links['post_links'].tolist()
 

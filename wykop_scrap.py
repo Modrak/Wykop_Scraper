@@ -48,20 +48,17 @@ try:
         sleep(1)
         all_posts_on_page = driver.find_elements(by=By.XPATH,
                                                  value='//section[contains(@id, "comment-") and @class="entry"]/article/header/div[@class="right"]/div/span/a')
-        print("zaczynam wyliczac")
         for post in all_posts_on_page:
             link = post.get_attribute("href")
             post_link_container.add_post_link(link)
-            print(link[:30])
 
-        sleep(2)
-        print("nastepna strona")
 
 except Exception as exception:
     print(exception)
     print("No big threads found.")
 sleep(2)
 driver.quit()
+
 
 # updating link in existing csv and droping both copies if duplicated
 if os.path.exists("post_links.csv"):
